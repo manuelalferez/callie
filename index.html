@@ -23,6 +23,62 @@
       href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css"
       rel="stylesheet"
     />
+    <style>
+      /* iOS Switch styles */
+      .switch {
+        position: relative;
+        display: inline-block;
+        width: 51px;
+        height: 31px;
+        transform: translateY(2px);
+      }
+
+      .switch input {
+        opacity: 0;
+        width: 0;
+        height: 0;
+      }
+
+      .slider {
+        position: absolute;
+        cursor: pointer;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background-color: #e9e9ea;
+        transition: 0.4s;
+        border-radius: 31px;
+      }
+
+      .slider:before {
+        position: absolute;
+        content: "";
+        height: 27px;
+        width: 27px;
+        left: 2px;
+        bottom: 2px;
+        background-color: white;
+        transition: 0.3s;
+        border-radius: 50%;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+      }
+
+      input:checked + .slider {
+        background-color: #4f46e5;
+      }
+
+      input:checked + .slider:before {
+        transform: translateX(20px);
+      }
+
+      .switch-label {
+        margin-left: 12px;
+        font-size: 16px;
+        font-weight: 500;
+        color: #4f46e5;
+      }
+    </style>
   </head>
   <body class="bg-gray-100 min-h-screen p-4 md:p-8">
     <div id="app" class="max-w-6xl mx-auto">
@@ -34,10 +90,58 @@
             class="w-20 h-20 md:w-24 md:h-24 mb-4"
           />
           <h1
-            class="text-3xl md:text-4xl font-bold text-center text-indigo-700"
+            class="text-4xl md:text-5xl font-extrabold text-center text-indigo-700 tracking-tight"
           >
             Callie
           </h1>
+          <div class="max-w-2xl mx-auto">
+            <p
+              class="text-xl md:text-2xl text-center text-indigo-600 mt-3 font-medium"
+            >
+              Stay connected with friends and loved ones through scheduled
+              check-ins and friendly reminders
+            </p>
+            <div class="mt-4 flex flex-col items-center text-center">
+              <div
+                class="inline-flex items-center text-gray-600 bg-indigo-50 rounded-lg px-4 py-2 mb-2"
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  class="h-5 w-5 text-indigo-500 mr-2"
+                  viewBox="0 0 20 20"
+                  fill="currentColor"
+                >
+                  <path
+                    fill-rule="evenodd"
+                    d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+                    clip-rule="evenodd"
+                  />
+                </svg>
+                <span class="text-base md:text-lg font-medium"
+                  >Close friends get reminders every 1-3 days</span
+                >
+              </div>
+              <div
+                class="inline-flex items-center text-gray-600 bg-indigo-50 rounded-lg px-4 py-2"
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  class="h-5 w-5 text-indigo-500 mr-2"
+                  viewBox="0 0 20 20"
+                  fill="currentColor"
+                >
+                  <path
+                    fill-rule="evenodd"
+                    d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+                    clip-rule="evenodd"
+                  />
+                </svg>
+                <span class="text-base md:text-lg font-medium"
+                  >Regular friends get reminders every 3-7 days</span
+                >
+              </div>
+            </div>
+          </div>
         </div>
 
         <!-- Add Friend Form -->
@@ -67,28 +171,23 @@
                 class="block text-base md:text-lg font-medium text-gray-700 mb-2"
                 >Type of Friend</label
               >
-              <div class="mt-1 flex flex-row gap-2 md:space-x-4">
-                <button
-                  onclick="setCloseness(true)"
-                  id="closeBtn"
-                  class="px-4 md:px-6 py-2 md:py-3 rounded-lg text-base md:text-lg font-medium transition-all duration-200 hover:transform hover:scale-105 bg-indigo-600 text-white w-full md:w-auto"
-                >
-                  Close Friend
-                </button>
-                <button
-                  onclick="setCloseness(false)"
-                  id="regularBtn"
-                  class="px-4 md:px-6 py-2 md:py-3 rounded-lg text-base md:text-lg font-medium transition-all duration-200 hover:transform hover:scale-105 bg-white text-indigo-600 border-2 border-indigo-600 w-full md:w-auto"
-                >
-                  Regular Friend
-                </button>
+              <div class="mt-3 flex items-center">
+                <label class="switch">
+                  <input
+                    type="checkbox"
+                    onchange="setCloseness(this.checked)"
+                    checked
+                  />
+                  <span class="slider"></span>
+                </label>
+                <span class="switch-label" id="switchLabel">Close Friend</span>
               </div>
             </div>
           </div>
 
           <button
             onclick="addFriend()"
-            class="bg-indigo-600 text-white px-8 md:px-12 py-3 md:py-4 rounded-lg text-lg md:text-xl font-bold hover:bg-indigo-700 transition-colors duration-200 w-full shadow-lg hover:shadow-xl"
+            class="bg-indigo-600 text-white px-8 md:px-12 py-3 md:py-4 rounded-lg text-lg md:text-xl font-bold hover:bg-indigo-700 transition-colors duration-200 w-full shadow-lg hover:shadow-xl hover:transform hover:scale-105"
           >
             Add Friend to List
           </button>
@@ -136,12 +235,9 @@
 
       function setCloseness(close) {
         isClose = close;
-        document.getElementById("closeBtn").className = close
-          ? "px-4 md:px-6 py-2 md:py-3 rounded-lg text-base md:text-lg font-medium transition-all duration-200 hover:transform hover:scale-105 bg-indigo-600 text-white w-full md:w-auto"
-          : "px-4 md:px-6 py-2 md:py-3 rounded-lg text-base md:text-lg font-medium transition-all duration-200 hover:transform hover:scale-105 bg-white text-indigo-600 border-2 border-indigo-600 w-full md:w-auto";
-        document.getElementById("regularBtn").className = !close
-          ? "px-4 md:px-6 py-2 md:py-3 rounded-lg text-base md:text-lg font-medium transition-all duration-200 hover:transform hover:scale-105 bg-indigo-600 text-white w-full md:w-auto"
-          : "px-4 md:px-6 py-2 md:py-3 rounded-lg text-base md:text-lg font-medium transition-all duration-200 hover:transform hover:scale-105 bg-white text-indigo-600 border-2 border-indigo-600 w-full md:w-auto";
+        document.getElementById("switchLabel").textContent = close
+          ? "Close Friend"
+          : "Regular Friend";
       }
 
       function addFriend() {
@@ -167,6 +263,7 @@
         // Reset form
         nameInput.value = "";
         setCloseness(true);
+        document.querySelector(".switch input").checked = true;
 
         // Save and refresh
         saveFriends();
@@ -313,18 +410,29 @@
                 .map(
                   (friend) => `
                 <div 
-                  class="mb-2 p-2 rounded-lg text-sm bg-white shadow cursor-move"
+                  class="relative mb-2 p-2 rounded-lg text-sm bg-white shadow hover:shadow-md transition-all cursor-move active:cursor-grabbing group"
                   draggable="true"
                   ondragstart="handleDragStart(event, ${friend.id}, '${
                     friend.nextCallDate
                   }')"
                 >
+                  <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" class="h-4 w-4 absolute top-1 right-1 text-gray-400 opacity-0 group-hover:opacity-100 transition-opacity"><path fill="currentColor" d="M8.5 7a1.5 1.5 0 1 0 0-3a1.5 1.5 0 0 0 0 3m0 6.5a1.5 1.5 0 1 0 0-3a1.5 1.5 0 0 0 0 3m1.5 5a1.5 1.5 0 1 1-3 0a1.5 1.5 0 0 1 3 0M15.5 7a1.5 1.5 0 1 0 0-3a1.5 1.5 0 0 0 0 3m1.5 5a1.5 1.5 0 1 1-3 0a1.5 1.5 0 0 1 3 0m-1.5 8a1.5 1.5 0 1 0 0-3a1.5 1.5 0 0 0 0 3"/></svg>
                   <div class="flex items-center gap-2">
                     <img src="${friend.avatar}" class="w-6 h-6 rounded-full" />
                     <div class="font-medium truncate">${friend.name}</div>
                   </div>
-                  <div class="text-xs text-gray-600">
-                    ${friend.isClose ? "Close Friend" : "Regular Friend"}
+                  <div class="text-xs text-gray-600 mt-1 flex items-center gap-1">
+                    ${
+                      friend.isClose
+                        ? `<svg xmlns="http://www.w3.org/2000/svg" class="h-3 w-3 text-pink-500" viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M12.001 4.529c2.349-2.109 5.979-2.039 8.242.228 2.262 2.268 2.34 5.88.236 8.236l-8.48 8.492-8.478-8.492c-2.104-2.356-2.025-5.974.236-8.236 2.265-2.264 5.888-2.34 8.244-.228z"/>
+                          </svg>
+                          <span>Close friend</span>`
+                        : `<svg xmlns="http://www.w3.org/2000/svg" class="h-3 w-3 text-blue-500" viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M7.5 6.5C7.5 8.981 9.519 11 12 11s4.5-2.019 4.5-4.5S14.481 2 12 2 7.5 4.019 7.5 6.5zM20 21h1v-1c0-3.859-3.141-7-7-7h-4c-3.86 0-7 3.141-7 7v1h17z"/>
+                          </svg>
+                          <span>Regular friend</span>`
+                    }
                   </div>
                   ${
                     isToday(date)
@@ -332,10 +440,7 @@
                          class="text-green-600 hover:text-green-800 text-xs mt-2 bg-green-50 px-2 py-1 rounded w-full">
                          Mark as Called
                        </button>`
-                      : `<button onclick="removeFriend(${friend.id})" 
-                         class="text-red-600 hover:text-red-800 text-xs mt-2 w-full">
-                         Remove
-                       </button>`
+                      : ""
                   }
                 </div>
               `
@@ -422,15 +527,21 @@
                   <h3 class="font-bold text-lg md:text-xl text-gray-800">${
                     friend.name
                   }</h3>
-                  <span class="inline-block px-3 py-1 rounded-full text-xs md:text-sm ${
+                  <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-lg text-xs md:text-sm ${
                     friend.isClose
                       ? "bg-green-100 text-green-700"
                       : "bg-blue-100 text-blue-700"
                   }">
                     ${
                       friend.isClose
-                        ? "Close Friend (1-3 days)"
-                        : "Regular Friend (3-7 days)"
+                        ? `<svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M12.001 4.529c2.349-2.109 5.979-2.039 8.242.228 2.262 2.268 2.34 5.88.236 8.236l-8.48 8.492-8.478-8.492c-2.104-2.356-2.025-5.974.236-8.236 2.265-2.264 5.888-2.34 8.244-.228z"/>
+                          </svg>
+                          Close Friend`
+                        : `<svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M7.5 6.5C7.5 8.981 9.519 11 12 11s4.5-2.019 4.5-4.5S14.481 2 12 2 7.5 4.019 7.5 6.5zM20 21h1v-1c0-3.859-3.141-7-7-7h-4c-3.86 0-7 3.141-7 7v1h17z"/>
+                          </svg>
+                          Regular Friend`
                     }
                   </span>
                 </div>
@@ -500,4 +611,48 @@
       };
     </script>
   </body>
+  <div class="mt-8 max-w-6xl mx-auto">
+    <div
+      class="bg-gradient-to-br from-indigo-50 to-purple-50 rounded-xl shadow-lg p-6 flex flex-col md:flex-row items-center justify-between gap-4"
+    >
+      <div class="flex items-center gap-4">
+        <img
+          src="https://api.dicebear.com/9.x/adventurer-neutral/svg?seed=manuelalferezruiz"
+          alt="Footer Avatar"
+          class="w-12 h-12 rounded-full shadow-md"
+        />
+        <div>
+          <div class="font-medium text-indigo-900">Created by</div>
+          <a
+            href="https://twitter.com/manuelalferez"
+            target="_blank"
+            rel="noopener noreferrer"
+            class="text-indigo-600 hover:text-indigo-800 transition-colors font-semibold flex items-center gap-1"
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="16"
+              height="16"
+              viewBox="0 0 24 24"
+              fill="currentColor"
+              class="inline-block"
+            >
+              <path
+                d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"
+              />
+            </svg>
+            @manuelalferez
+          </a>
+        </div>
+      </div>
+      <a
+        href="https://manuelalferez.com"
+        target="_blank"
+        rel="noopener noreferrer"
+        class="px-6 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-colors shadow-md hover:shadow-lg text-sm font-medium"
+      >
+        About
+      </a>
+    </div>
+  </div>
 </html>
