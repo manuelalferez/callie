@@ -3,54 +3,82 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Friend Call Reminder</title>
+    <title>Callie</title>
+    <link
+      rel="icon"
+      type="image/png"
+      href="https://api.dicebear.com/9.x/adventurer-neutral/png?seed=Callie"
+    />
+    <link
+      rel="apple-touch-icon"
+      href="https://api.dicebear.com/9.x/adventurer-neutral/png?seed=Callie&size=180"
+    />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta
+      name="apple-mobile-web-app-status-bar-style"
+      content="black-translucent"
+    />
+    <meta name="apple-mobile-web-app-title" content="Callie" />
     <link
       href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css"
       rel="stylesheet"
     />
   </head>
-  <body class="bg-gray-100 min-h-screen p-8">
+  <body class="bg-gray-100 min-h-screen p-4 md:p-8">
     <div id="app" class="max-w-6xl mx-auto">
-      <div class="bg-white rounded-xl shadow-xl p-8">
-        <h1 class="text-4xl font-bold mb-8 text-center text-indigo-700">
-          Friend Call Reminder
-        </h1>
+      <div class="bg-white rounded-xl shadow-xl p-4 md:p-8">
+        <div class="flex flex-col items-center mb-8">
+          <img
+            src="https://api.dicebear.com/9.x/adventurer-neutral/png?seed=Callie"
+            alt="Callie Logo"
+            class="w-20 h-20 md:w-24 md:h-24 mb-4"
+          />
+          <h1
+            class="text-3xl md:text-4xl font-bold text-center text-indigo-700"
+          >
+            Callie
+          </h1>
+        </div>
 
         <!-- Add Friend Form -->
-        <div class="mb-10 bg-indigo-50 p-6 rounded-lg">
-          <h2 class="text-2xl font-semibold mb-6 text-indigo-600">
+        <div class="mb-8 md:mb-10 bg-indigo-50 p-4 md:p-6 rounded-lg">
+          <h2
+            class="text-xl md:text-2xl font-semibold mb-4 md:mb-6 text-indigo-600"
+          >
             Add New Friend
           </h2>
 
-          <div class="flex gap-6 mb-6">
+          <div class="flex flex-col md:flex-row gap-4 md:gap-6 mb-4 md:mb-6">
             <div class="flex-1">
-              <label class="block text-lg font-medium text-gray-700 mb-2"
+              <label
+                class="block text-base md:text-lg font-medium text-gray-700 mb-2"
                 >Friend's Name</label
               >
               <input
                 type="text"
                 id="friendName"
                 placeholder="Enter friend's name"
-                class="mt-1 block w-full rounded-lg border-2 border-indigo-200 p-3 text-lg shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
+                class="mt-1 block w-full rounded-lg border-2 border-indigo-200 p-2 md:p-3 text-base md:text-lg shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
               />
             </div>
 
             <div class="flex-1">
-              <label class="block text-lg font-medium text-gray-700 mb-2"
+              <label
+                class="block text-base md:text-lg font-medium text-gray-700 mb-2"
                 >Type of Friend</label
               >
-              <div class="mt-1 space-x-4">
+              <div class="mt-1 flex flex-row gap-2 md:space-x-4">
                 <button
                   onclick="setCloseness(true)"
                   id="closeBtn"
-                  class="px-6 py-3 rounded-lg text-lg font-medium transition-all duration-200 hover:transform hover:scale-105 bg-indigo-600 text-white"
+                  class="px-4 md:px-6 py-2 md:py-3 rounded-lg text-base md:text-lg font-medium transition-all duration-200 hover:transform hover:scale-105 bg-indigo-600 text-white w-full md:w-auto"
                 >
                   Close Friend
                 </button>
                 <button
                   onclick="setCloseness(false)"
                   id="regularBtn"
-                  class="px-6 py-3 rounded-lg text-lg font-medium transition-all duration-200 hover:transform hover:scale-105 bg-white text-indigo-600 border-2 border-indigo-600"
+                  class="px-4 md:px-6 py-2 md:py-3 rounded-lg text-base md:text-lg font-medium transition-all duration-200 hover:transform hover:scale-105 bg-white text-indigo-600 border-2 border-indigo-600 w-full md:w-auto"
                 >
                   Regular Friend
                 </button>
@@ -60,27 +88,40 @@
 
           <button
             onclick="addFriend()"
-            class="bg-indigo-600 text-white px-12 py-4 rounded-lg text-xl font-bold hover:bg-indigo-700 transition-colors duration-200 w-full shadow-lg hover:shadow-xl"
+            class="bg-indigo-600 text-white px-8 md:px-12 py-3 md:py-4 rounded-lg text-lg md:text-xl font-bold hover:bg-indigo-700 transition-colors duration-200 w-full shadow-lg hover:shadow-xl"
           >
             Add Friend to List
           </button>
         </div>
 
         <!-- Calendar View -->
-        <div class="mb-10">
-          <h2 class="text-2xl font-semibold mb-6 text-indigo-700">
+        <div class="mb-8 md:mb-10">
+          <h2
+            class="text-xl md:text-2xl font-semibold mb-4 md:mb-6 text-indigo-700"
+          >
             Upcoming Calls Calendar
           </h2>
           <div
-            class="grid grid-cols-7 gap-2 mb-4 text-center"
-            id="calendarHeader"
+            class="text-lg md:text-xl font-semibold text-center mb-4"
+            id="currentMonth"
           ></div>
-          <div class="grid grid-cols-7 gap-2" id="calendarGrid"></div>
+          <!-- Desktop Calendar -->
+          <div class="hidden md:block">
+            <div
+              class="grid grid-cols-7 gap-2 mb-4 text-center text-base"
+              id="calendarHeader"
+            ></div>
+            <div class="grid grid-cols-7 gap-2" id="calendarGrid"></div>
+          </div>
+          <!-- Mobile Calendar List -->
+          <div class="md:hidden space-y-4" id="calendarList"></div>
         </div>
 
         <!-- Friends List -->
-        <div class="bg-indigo-50 p-6 rounded-lg">
-          <h2 class="text-2xl font-semibold mb-6 text-indigo-700">
+        <div class="bg-indigo-50 p-4 md:p-6 rounded-lg">
+          <h2
+            class="text-xl md:text-2xl font-semibold mb-4 md:mb-6 text-indigo-700"
+          >
             Friends List
           </h2>
           <div class="space-y-4" id="friendsList"></div>
@@ -96,11 +137,11 @@
       function setCloseness(close) {
         isClose = close;
         document.getElementById("closeBtn").className = close
-          ? "px-6 py-3 rounded-lg text-lg font-medium transition-all duration-200 hover:transform hover:scale-105 bg-indigo-600 text-white"
-          : "px-6 py-3 rounded-lg text-lg font-medium transition-all duration-200 hover:transform hover:scale-105 bg-white text-indigo-600 border-2 border-indigo-600";
+          ? "px-4 md:px-6 py-2 md:py-3 rounded-lg text-base md:text-lg font-medium transition-all duration-200 hover:transform hover:scale-105 bg-indigo-600 text-white w-full md:w-auto"
+          : "px-4 md:px-6 py-2 md:py-3 rounded-lg text-base md:text-lg font-medium transition-all duration-200 hover:transform hover:scale-105 bg-white text-indigo-600 border-2 border-indigo-600 w-full md:w-auto";
         document.getElementById("regularBtn").className = !close
-          ? "px-6 py-3 rounded-lg text-lg font-medium transition-all duration-200 hover:transform hover:scale-105 bg-indigo-600 text-white"
-          : "px-6 py-3 rounded-lg text-lg font-medium transition-all duration-200 hover:transform hover:scale-105 bg-white text-indigo-600 border-2 border-indigo-600";
+          ? "px-4 md:px-6 py-2 md:py-3 rounded-lg text-base md:text-lg font-medium transition-all duration-200 hover:transform hover:scale-105 bg-indigo-600 text-white w-full md:w-auto"
+          : "px-4 md:px-6 py-2 md:py-3 rounded-lg text-base md:text-lg font-medium transition-all duration-200 hover:transform hover:scale-105 bg-white text-indigo-600 border-2 border-indigo-600 w-full md:w-auto";
       }
 
       function addFriend() {
@@ -212,15 +253,29 @@
       function renderCalendar() {
         const headerDiv = document.getElementById("calendarHeader");
         const gridDiv = document.getElementById("calendarGrid");
+        const listDiv = document.getElementById("calendarList");
+        const monthDiv = document.getElementById("currentMonth");
         const days = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
+        const months = [
+          "January",
+          "February",
+          "March",
+          "April",
+          "May",
+          "June",
+          "July",
+          "August",
+          "September",
+          "October",
+          "November",
+          "December",
+        ];
 
-        // Render header
-        headerDiv.innerHTML = days
-          .map((day) => `<div class="font-bold text-gray-600">${day}</div>`)
-          .join("");
+        const today = new Date();
+        monthDiv.textContent =
+          months[today.getMonth()] + " " + today.getFullYear();
 
         // Generate calendar days
-        const today = new Date();
         const calendarDays = [];
         const start = new Date(today);
         const dayOfWeek = today.getDay();
@@ -233,7 +288,11 @@
           calendarDays.push(date);
         }
 
-        // Render calendar grid
+        // Render desktop calendar
+        headerDiv.innerHTML = days
+          .map((day) => `<div class="font-bold text-gray-600">${day}</div>`)
+          .join("");
+
         gridDiv.innerHTML = calendarDays
           .map((date) => {
             const dateString = date.toISOString();
@@ -262,7 +321,7 @@
                 >
                   <div class="flex items-center gap-2">
                     <img src="${friend.avatar}" class="w-6 h-6 rounded-full" />
-                    <div class="font-medium">${friend.name}</div>
+                    <div class="font-medium truncate">${friend.name}</div>
                   </div>
                   <div class="text-xs text-gray-600">
                     ${friend.isClose ? "Close Friend" : "Regular Friend"}
@@ -270,11 +329,11 @@
                   ${
                     isToday(date)
                       ? `<button onclick="markAsCalled(${friend.id})" 
-                         class="text-green-600 hover:text-green-800 text-xs mt-2 bg-green-50 px-2 py-1 rounded">
+                         class="text-green-600 hover:text-green-800 text-xs mt-2 bg-green-50 px-2 py-1 rounded w-full">
                          Mark as Called
                        </button>`
                       : `<button onclick="removeFriend(${friend.id})" 
-                         class="text-red-600 hover:text-red-800 text-xs mt-2">
+                         class="text-red-600 hover:text-red-800 text-xs mt-2 w-full">
                          Remove
                        </button>`
                   }
@@ -286,6 +345,64 @@
           `;
           })
           .join("");
+
+        // Render mobile calendar list
+        listDiv.innerHTML = calendarDays
+          .filter((date) => getFriendsForDate(date).length > 0)
+          .map((date) => {
+            const friendsForDate = getFriendsForDate(date);
+            const isDateToday = isToday(date);
+            const dateString = date.toLocaleDateString("en-US", {
+              weekday: "short",
+              month: "short",
+              day: "numeric",
+            });
+
+            return `
+              <div class="bg-white rounded-lg shadow p-4 ${
+                isDateToday ? "border-2 border-indigo-400" : ""
+              }">
+                <div class="font-semibold text-lg mb-3 ${
+                  isDateToday ? "text-indigo-600" : "text-gray-700"
+                }">
+                  ${dateString}
+                  ${isDateToday ? " (Today)" : ""}
+                </div>
+                <div class="space-y-3">
+                  ${friendsForDate
+                    .map(
+                      (friend) => `
+                    <div class="flex items-center justify-between gap-3 p-2 bg-gray-50 rounded-lg">
+                      <div class="flex items-center gap-2">
+                        <img src="${
+                          friend.avatar
+                        }" class="w-8 h-8 rounded-full" />
+                        <div>
+                          <div class="font-medium">${friend.name}</div>
+                          <div class="text-xs text-gray-600">
+                            ${
+                              friend.isClose ? "Close Friend" : "Regular Friend"
+                            }
+                          </div>
+                        </div>
+                      </div>
+                      ${
+                        isDateToday
+                          ? `<button onclick="markAsCalled(${friend.id})" 
+                             class="bg-green-100 text-green-700 px-3 py-1.5 rounded-lg text-sm">
+                             Called
+                           </button>`
+                          : ""
+                      }
+                    </div>
+                  `
+                    )
+                    .join("")}
+                </div>
+              </div>
+            `;
+          })
+          .join("");
       }
 
       function renderFriendsList() {
@@ -293,19 +410,19 @@
         listDiv.innerHTML = friends
           .map(
             (friend) => `
-          <div class="bg-white p-6 rounded-xl shadow-md hover:shadow-lg transition-shadow">
-            <div class="flex items-center justify-between">
+          <div class="bg-white p-4 md:p-6 rounded-xl shadow-md hover:shadow-lg transition-shadow">
+            <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
               <div class="flex items-center gap-4">
-                <div class="w-12 h-12 rounded-full bg-indigo-100 flex items-center justify-center overflow-hidden">
+                <div class="w-10 h-10 md:w-12 md:h-12 rounded-full bg-indigo-100 flex items-center justify-center overflow-hidden">
                   <img src="${
                     friend.avatar
                   }" class="w-full h-full object-cover" />
                 </div>
                 <div>
-                  <h3 class="font-bold text-xl text-gray-800">${
+                  <h3 class="font-bold text-lg md:text-xl text-gray-800">${
                     friend.name
                   }</h3>
-                  <span class="inline-block px-3 py-1 rounded-full text-sm ${
+                  <span class="inline-block px-3 py-1 rounded-full text-xs md:text-sm ${
                     friend.isClose
                       ? "bg-green-100 text-green-700"
                       : "bg-blue-100 text-blue-700"
@@ -318,10 +435,10 @@
                   </span>
                 </div>
               </div>
-              <div class="flex gap-3">
+              <div class="flex flex-col md:flex-row gap-2 md:gap-3">
                 <button
                   onclick="toggleFriendCloseness(${friend.id})"
-                  class="flex items-center gap-2 px-4 py-2 rounded-lg ${
+                  class="flex items-center justify-center gap-2 px-3 md:px-4 py-2 rounded-lg text-sm ${
                     friend.isClose
                       ? "bg-blue-100 text-blue-700 hover:bg-blue-200"
                       : "bg-green-100 text-green-700 hover:bg-green-200"
@@ -333,7 +450,7 @@
                 </button>
                 <button
                   onclick="removeFriend(${friend.id})"
-                  class="bg-red-50 text-red-600 px-4 py-2 rounded-lg hover:bg-red-100 transition-colors"
+                  class="bg-red-50 text-red-600 px-3 md:px-4 py-2 rounded-lg hover:bg-red-100 transition-colors text-sm"
                 >
                   Delete
                 </button>
