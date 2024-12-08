@@ -8,7 +8,6 @@
       href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css"
       rel="stylesheet"
     />
-    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
   </head>
   <body class="bg-gray-100 min-h-screen p-8">
     <div id="app" class="max-w-6xl mx-auto">
@@ -23,267 +22,365 @@
             Add New Friend
           </h2>
 
-          <div class="mb-6">
-            <label class="block text-lg font-medium text-gray-700 mb-2"
-              >Friend's Name</label
-            >
-            <input
-              type="text"
-              v-model="newFriend.name"
-              placeholder="Enter friend's name"
-              class="mt-1 block w-full rounded-lg border-2 border-indigo-200 p-3 text-lg shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
-            />
-          </div>
+          <div class="flex gap-6 mb-6">
+            <div class="flex-1">
+              <label class="block text-lg font-medium text-gray-700 mb-2"
+                >Friend's Name</label
+              >
+              <input
+                type="text"
+                id="friendName"
+                placeholder="Enter friend's name"
+                class="mt-1 block w-full rounded-lg border-2 border-indigo-200 p-3 text-lg shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
+              />
+            </div>
 
-          <div class="mb-6">
-            <label class="block text-lg font-medium text-gray-700 mb-2"
-              >How often would you like to call them?</label
-            >
-            <div class="mt-3 space-x-6">
-              <button
-                @click="setCloseness(true)"
-                :class="{'bg-indigo-600 text-white': newFriend.isClose, 'bg-white text-indigo-600 border-2 border-indigo-600': !newFriend.isClose}"
-                class="px-6 py-3 rounded-lg text-lg font-medium transition-all duration-200 hover:transform hover:scale-105"
+            <div class="flex-1">
+              <label class="block text-lg font-medium text-gray-700 mb-2"
+                >Type of Friend</label
               >
-                Close Friend (1-3 days)
-              </button>
-              <button
-                @click="setCloseness(false)"
-                :class="{'bg-indigo-600 text-white': !newFriend.isClose, 'bg-white text-indigo-600 border-2 border-indigo-600': newFriend.isClose}"
-                class="px-6 py-3 rounded-lg text-lg font-medium transition-all duration-200 hover:transform hover:scale-105"
-              >
-                Regular Friend (3-7 days)
-              </button>
+              <div class="mt-1 space-x-4">
+                <button
+                  onclick="setCloseness(true)"
+                  id="closeBtn"
+                  class="px-6 py-3 rounded-lg text-lg font-medium transition-all duration-200 hover:transform hover:scale-105 bg-indigo-600 text-white"
+                >
+                  Close Friend
+                </button>
+                <button
+                  onclick="setCloseness(false)"
+                  id="regularBtn"
+                  class="px-6 py-3 rounded-lg text-lg font-medium transition-all duration-200 hover:transform hover:scale-105 bg-white text-indigo-600 border-2 border-indigo-600"
+                >
+                  Regular Friend
+                </button>
+              </div>
             </div>
           </div>
 
           <button
-            @click="addFriend"
-            class="bg-indigo-600 text-white px-8 py-3 rounded-lg text-lg font-medium hover:bg-indigo-700 transition-colors duration-200 w-full md:w-auto"
+            onclick="addFriend()"
+            class="bg-indigo-600 text-white px-12 py-4 rounded-lg text-xl font-bold hover:bg-indigo-700 transition-colors duration-200 w-full shadow-lg hover:shadow-xl"
           >
             Add Friend to List
           </button>
         </div>
 
         <!-- Calendar View -->
-        <div>
+        <div class="mb-10">
           <h2 class="text-2xl font-semibold mb-6 text-indigo-700">
             Upcoming Calls Calendar
           </h2>
-          <div class="grid grid-cols-7 gap-2 mb-4 text-center">
-            <div
-              v-for="day in ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']"
-              class="font-bold text-gray-600"
-            >
-              {{ day }}
-            </div>
-          </div>
-          <div class="grid grid-cols-7 gap-2">
-            <template v-for="date in calendarDays" :key="date.toISOString()">
-              <div
-                class="min-h-[120px] p-2 border rounded-lg"
-                :class="isToday(date) ? 'bg-indigo-50 border-indigo-300' : 'border-gray-200'"
-              >
-                <div class="text-sm text-gray-600 mb-2">
-                  {{ formatCalendarDate(date) }}
-                </div>
-                <div
-                  v-for="friend in getFriendsForDate(date)"
-                  :key="friend.id"
-                  class="mb-2 p-2 rounded-lg text-sm bg-white shadow"
-                >
-                  <div class="font-medium">{{ friend.name }}</div>
-                  <div class="text-xs text-gray-600">
-                    {{ friend.isClose ? 'Close Friend' : 'Regular Friend' }}
-                  </div>
-                  <button
-                    v-if="isToday(date)"
-                    @click="markAsCalled(friend)"
-                    class="text-green-600 hover:text-green-800 text-xs mt-2 bg-green-50 px-2 py-1 rounded"
-                  >
-                    Mark as Called
-                  </button>
-                  <button
-                    v-else
-                    @click="removeFriend(friend.id)"
-                    class="text-red-600 hover:text-red-800 text-xs mt-2"
-                  >
-                    Remove
-                  </button>
-                </div>
-              </div>
-            </template>
-          </div>
+          <div
+            class="grid grid-cols-7 gap-2 mb-4 text-center"
+            id="calendarHeader"
+          ></div>
+          <div class="grid grid-cols-7 gap-2" id="calendarGrid"></div>
+        </div>
+
+        <!-- Friends List -->
+        <div class="bg-indigo-50 p-6 rounded-lg">
+          <h2 class="text-2xl font-semibold mb-6 text-indigo-700">
+            Friends List
+          </h2>
+          <div class="space-y-4" id="friendsList"></div>
         </div>
       </div>
     </div>
 
     <script>
-      const { createApp } = Vue;
+      let friends = [];
+      let isClose = true;
+      let timer = null;
 
-      createApp({
-        data() {
-          return {
-            newFriend: {
-              name: "",
-              isClose: true,
-            },
-            friends: [],
-            timer: null,
-          };
-        },
-        computed: {
-          calendarDays() {
-            const today = new Date();
-            const days = [];
-            // Start from the beginning of current week (Monday)
-            const start = new Date(today);
-            const dayOfWeek = today.getDay();
-            const diff = dayOfWeek === 0 ? -6 : 1 - dayOfWeek; // Adjust to get Monday
-            start.setDate(today.getDate() + diff);
+      function setCloseness(close) {
+        isClose = close;
+        document.getElementById("closeBtn").className = close
+          ? "px-6 py-3 rounded-lg text-lg font-medium transition-all duration-200 hover:transform hover:scale-105 bg-indigo-600 text-white"
+          : "px-6 py-3 rounded-lg text-lg font-medium transition-all duration-200 hover:transform hover:scale-105 bg-white text-indigo-600 border-2 border-indigo-600";
+        document.getElementById("regularBtn").className = !close
+          ? "px-6 py-3 rounded-lg text-lg font-medium transition-all duration-200 hover:transform hover:scale-105 bg-indigo-600 text-white"
+          : "px-6 py-3 rounded-lg text-lg font-medium transition-all duration-200 hover:transform hover:scale-105 bg-white text-indigo-600 border-2 border-indigo-600";
+      }
 
-            // Generate 28 days (4 weeks)
-            for (let i = 0; i < 28; i++) {
-              const date = new Date(start);
-              date.setDate(start.getDate() + i);
-              days.push(date);
-            }
-            return days;
-          },
-        },
-        methods: {
-          setCloseness(isClose) {
-            this.newFriend.isClose = isClose;
-          },
-          addFriend() {
-            if (!this.newFriend.name) return;
+      function addFriend() {
+        const nameInput = document.getElementById("friendName");
+        if (!nameInput.value) return;
 
-            const today = new Date();
-            const daysToAdd = this.newFriend.isClose
-              ? Math.floor(Math.random() * 3) + 1 // 1-3 days
-              : Math.floor(Math.random() * 5) + 3; // 3-7 days
+        const today = new Date();
+        const daysToAdd = isClose
+          ? Math.floor(Math.random() * 3) + 1 // 1-3 days
+          : Math.floor(Math.random() * 5) + 3; // 3-7 days
 
-            const nextCall = new Date(today);
-            nextCall.setDate(nextCall.getDate() + daysToAdd);
+        const nextCall = new Date(today);
+        nextCall.setDate(nextCall.getDate() + daysToAdd);
 
-            this.friends.push({
-              id: Date.now(),
-              name: this.newFriend.name,
-              isClose: this.newFriend.isClose,
-              nextCallDate: nextCall.toISOString(),
-            });
+        friends.push({
+          id: Date.now(),
+          name: nameInput.value,
+          isClose: isClose,
+          nextCallDate: nextCall.toISOString(),
+          avatar: `https://api.dicebear.com/9.x/avataaars-neutral/svg?seed=${nameInput.value}`,
+        });
 
-            // Reset form
-            this.newFriend.name = "";
-            this.newFriend.isClose = true;
+        // Reset form
+        nameInput.value = "";
+        setCloseness(true);
 
-            // Save to localStorage
-            this.saveFriends();
-          },
-          markAsCalled(friend) {
-            // Calculate next call date based on friend type
-            const daysToAdd = friend.isClose
-              ? Math.floor(Math.random() * 3) + 1 // 1-3 days
-              : Math.floor(Math.random() * 5) + 3; // 3-7 days
+        // Save and refresh
+        saveFriends();
+        renderCalendar();
+        renderFriendsList();
+      }
 
-            const nextCall = new Date();
-            nextCall.setDate(nextCall.getDate() + daysToAdd);
+      function markAsCalled(friendId) {
+        const friend = friends.find((f) => f.id === friendId);
+        if (!friend) return;
 
-            // Update friend's next call date
-            const index = this.friends.findIndex((f) => f.id === friend.id);
-            if (index !== -1) {
-              this.friends[index].nextCallDate = nextCall.toISOString();
-              this.saveFriends();
-            }
-          },
-          removeFriend(id) {
-            this.friends = this.friends.filter((friend) => friend.id !== id);
-            this.saveFriends();
-          },
-          saveFriends() {
-            localStorage.setItem("friends", JSON.stringify(this.friends));
-          },
-          loadFriends() {
-            const saved = localStorage.getItem("friends");
-            if (saved) {
-              this.friends = JSON.parse(saved);
-            }
-          },
-          formatDate(dateString) {
-            return new Date(dateString).toLocaleDateString("en-US", {
-              weekday: "long",
-              year: "numeric",
-              month: "long",
-              day: "numeric",
-            });
-          },
-          formatCalendarDate(date) {
-            return date.getDate();
-          },
-          isToday(date) {
-            const today = new Date();
-            return (
-              date.getDate() === today.getDate() &&
-              date.getMonth() === today.getMonth() &&
-              date.getFullYear() === today.getFullYear()
-            );
-          },
-          getFriendsForDate(date) {
-            return this.friends.filter((friend) => {
-              const callDate = new Date(friend.nextCallDate);
-              return (
-                callDate.getDate() === date.getDate() &&
-                callDate.getMonth() === date.getMonth() &&
-                callDate.getFullYear() === date.getFullYear()
-              );
-            });
-          },
-          getTimeLeft(dateString) {
-            const now = new Date();
-            const callDate = new Date(dateString);
-            const diff = callDate - now;
+        const daysToAdd = friend.isClose
+          ? Math.floor(Math.random() * 3) + 1
+          : Math.floor(Math.random() * 5) + 3;
 
-            const days = Math.floor(diff / (1000 * 60 * 60 * 24));
-            const hours = Math.floor(
-              (diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)
-            );
-            const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+        const nextCall = new Date();
+        nextCall.setDate(nextCall.getDate() + daysToAdd);
+        friend.nextCallDate = nextCall.toISOString();
 
-            if (diff < 0) {
-              return "Call overdue!";
-            }
+        saveFriends();
+        renderCalendar();
+        renderFriendsList();
+      }
 
-            return `Time left: ${days}d ${hours}h ${minutes}m`;
-          },
-          getTimeLeftColor(dateString) {
-            const now = new Date();
-            const callDate = new Date(dateString);
-            const diff = callDate - now;
+      function removeFriend(id) {
+        friends = friends.filter((friend) => friend.id !== id);
+        saveFriends();
+        renderCalendar();
+        renderFriendsList();
+      }
 
-            if (diff < 0) {
-              return "text-red-600 font-bold bg-red-50";
-            } else if (diff < 24 * 60 * 60 * 1000) {
-              // less than 24 hours
-              return "text-yellow-600 bg-yellow-50";
-            }
-            return "text-green-600 bg-green-50";
-          },
-          updateCountdowns() {
-            // Force a re-render of the countdown timers
-            this.friends = [...this.friends];
-          },
-        },
-        mounted() {
-          this.loadFriends();
-          // Update countdowns every minute
-          this.timer = setInterval(this.updateCountdowns, 60000);
-        },
-        beforeUnmount() {
-          if (this.timer) {
-            clearInterval(this.timer);
-          }
-        },
-      }).mount("#app");
+      function saveFriends() {
+        localStorage.setItem("friends", JSON.stringify(friends));
+      }
+
+      function loadFriends() {
+        const saved = localStorage.getItem("friends");
+        if (saved) {
+          friends = JSON.parse(saved);
+        }
+      }
+
+      function isToday(date) {
+        const today = new Date();
+        return (
+          date.getDate() === today.getDate() &&
+          date.getMonth() === today.getMonth() &&
+          date.getFullYear() === today.getFullYear()
+        );
+      }
+
+      function getFriendsForDate(date) {
+        return friends.filter((friend) => {
+          const callDate = new Date(friend.nextCallDate);
+          return (
+            callDate.getDate() === date.getDate() &&
+            callDate.getMonth() === date.getMonth() &&
+            callDate.getFullYear() === date.getFullYear()
+          );
+        });
+      }
+
+      function handleDragStart(e, friendId, originalDate) {
+        e.dataTransfer.setData("friendId", friendId);
+        e.dataTransfer.setData("originalDate", originalDate);
+      }
+
+      function handleDrop(e, newDate) {
+        e.preventDefault();
+        const friendId = parseInt(e.dataTransfer.getData("friendId"));
+        const friend = friends.find((f) => f.id === friendId);
+        if (friend) {
+          friend.nextCallDate = newDate;
+          saveFriends();
+          renderCalendar();
+          renderFriendsList();
+        }
+      }
+
+      function handleDragOver(e) {
+        e.preventDefault();
+      }
+
+      function renderCalendar() {
+        const headerDiv = document.getElementById("calendarHeader");
+        const gridDiv = document.getElementById("calendarGrid");
+        const days = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
+
+        // Render header
+        headerDiv.innerHTML = days
+          .map((day) => `<div class="font-bold text-gray-600">${day}</div>`)
+          .join("");
+
+        // Generate calendar days
+        const today = new Date();
+        const calendarDays = [];
+        const start = new Date(today);
+        const dayOfWeek = today.getDay();
+        const diff = dayOfWeek === 0 ? -6 : 1 - dayOfWeek;
+        start.setDate(today.getDate() + diff);
+
+        for (let i = 0; i < 28; i++) {
+          const date = new Date(start);
+          date.setDate(start.getDate() + i);
+          calendarDays.push(date);
+        }
+
+        // Render calendar grid
+        gridDiv.innerHTML = calendarDays
+          .map((date) => {
+            const dateString = date.toISOString();
+            const friendsForDate = getFriendsForDate(date);
+
+            return `
+            <div 
+              class="min-h-[120px] p-2 border rounded-lg ${
+                isToday(date)
+                  ? "bg-indigo-50 border-indigo-300"
+                  : "border-gray-200"
+              }"
+              ondrop="handleDrop(event, '${dateString}')"
+              ondragover="handleDragOver(event)"
+            >
+              <div class="text-sm text-gray-600 mb-2">${date.getDate()}</div>
+              ${friendsForDate
+                .map(
+                  (friend) => `
+                <div 
+                  class="mb-2 p-2 rounded-lg text-sm bg-white shadow cursor-move"
+                  draggable="true"
+                  ondragstart="handleDragStart(event, ${friend.id}, '${
+                    friend.nextCallDate
+                  }')"
+                >
+                  <div class="flex items-center gap-2">
+                    <img src="${friend.avatar}" class="w-6 h-6 rounded-full" />
+                    <div class="font-medium">${friend.name}</div>
+                  </div>
+                  <div class="text-xs text-gray-600">
+                    ${friend.isClose ? "Close Friend" : "Regular Friend"}
+                  </div>
+                  ${
+                    isToday(date)
+                      ? `<button onclick="markAsCalled(${friend.id})" 
+                         class="text-green-600 hover:text-green-800 text-xs mt-2 bg-green-50 px-2 py-1 rounded">
+                         Mark as Called
+                       </button>`
+                      : `<button onclick="removeFriend(${friend.id})" 
+                         class="text-red-600 hover:text-red-800 text-xs mt-2">
+                         Remove
+                       </button>`
+                  }
+                </div>
+              `
+                )
+                .join("")}
+            </div>
+          `;
+          })
+          .join("");
+      }
+
+      function renderFriendsList() {
+        const listDiv = document.getElementById("friendsList");
+        listDiv.innerHTML = friends
+          .map(
+            (friend) => `
+          <div class="bg-white p-6 rounded-xl shadow-md hover:shadow-lg transition-shadow">
+            <div class="flex items-center justify-between">
+              <div class="flex items-center gap-4">
+                <div class="w-12 h-12 rounded-full bg-indigo-100 flex items-center justify-center overflow-hidden">
+                  <img src="${
+                    friend.avatar
+                  }" class="w-full h-full object-cover" />
+                </div>
+                <div>
+                  <h3 class="font-bold text-xl text-gray-800">${
+                    friend.name
+                  }</h3>
+                  <span class="inline-block px-3 py-1 rounded-full text-sm ${
+                    friend.isClose
+                      ? "bg-green-100 text-green-700"
+                      : "bg-blue-100 text-blue-700"
+                  }">
+                    ${
+                      friend.isClose
+                        ? "Close Friend (1-3 days)"
+                        : "Regular Friend (3-7 days)"
+                    }
+                  </span>
+                </div>
+              </div>
+              <div class="flex gap-3">
+                <button
+                  onclick="toggleFriendCloseness(${friend.id})"
+                  class="flex items-center gap-2 px-4 py-2 rounded-lg ${
+                    friend.isClose
+                      ? "bg-blue-100 text-blue-700 hover:bg-blue-200"
+                      : "bg-green-100 text-green-700 hover:bg-green-200"
+                  }"
+                >
+                  <span>Switch to ${
+                    friend.isClose ? "Regular" : "Close"
+                  } Friend</span>
+                </button>
+                <button
+                  onclick="removeFriend(${friend.id})"
+                  class="bg-red-50 text-red-600 px-4 py-2 rounded-lg hover:bg-red-100 transition-colors"
+                >
+                  Delete
+                </button>
+              </div>
+            </div>
+          </div>
+        `
+          )
+          .join("");
+      }
+
+      function toggleFriendCloseness(friendId) {
+        const friend = friends.find((f) => f.id === friendId);
+        if (!friend) return;
+
+        friend.isClose = !friend.isClose;
+        const daysToAdd = friend.isClose
+          ? Math.floor(Math.random() * 3) + 1
+          : Math.floor(Math.random() * 5) + 3;
+
+        const nextCall = new Date();
+        nextCall.setDate(nextCall.getDate() + daysToAdd);
+        friend.nextCallDate = nextCall.toISOString();
+
+        saveFriends();
+        renderCalendar();
+        renderFriendsList();
+      }
+
+      // Initialize
+      window.onload = function () {
+        loadFriends();
+        renderCalendar();
+        renderFriendsList();
+        // Update every minute
+        timer = setInterval(() => {
+          renderCalendar();
+          renderFriendsList();
+        }, 60000);
+      };
+
+      // Cleanup
+      window.onunload = function () {
+        if (timer) {
+          clearInterval(timer);
+        }
+      };
     </script>
   </body>
 </html>
